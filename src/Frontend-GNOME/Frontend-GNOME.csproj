@@ -28,6 +28,7 @@
     <EnvironmentVariables>
       <EnvironmentVariables>
         <Variable name="MONO_TRACE_LISTENER" value="Console.Out" />
+        <Variable name="MONO_TLS_SESSION_CACHE_TIMEOUT" value="0" />
       </EnvironmentVariables>
     </EnvironmentVariables>
     <ConsolePause>false</ConsolePause>
