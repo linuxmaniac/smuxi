@@ -1,13 +1,7 @@
 /*
- * $Id$
- * $URL$
- * $Rev$
- * $Author$
- * $Date$
- *
  * Smuxi - Smart MUltipleXed Irc
  *
- * Copyright (c) 2005-2006 Mirco Bauer <meebey@meebey.net>
+ * Copyright (c) 2005-2006, 2008, 2012-2013, 2015 Mirco Bauer <meebey@meebey.net>
  *
  * Full GPL License: <http://www.gnu.org/licenses/gpl.txt>
  *
@@ -27,52 +21,97 @@
  */
 
 using System;
+using System.Reflection;
+using NDesk.Options;
+using Smuxi.Common;
 
 namespace Smuxi.Frontend.Gnome
-{ 
+{
+    public class CommandLineInterface : MarshalByRefObject
+    {
+        public void OpenLink(string link)
+        {
+            Frontend.OpenLink(new Uri(link));
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            // live forever
+            return null;
+        }
+    }
+
     public class MainClass
     {
 #if LOG4NET
         private static readonly log4net.ILog _Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #endif
+        static readonly string LibraryTextDomain = "smuxi-frontend-gnome";
+        static SingleApplicationInstance<CommandLineInterface> Instance { get; set; }
 
         public static void Main(string[] args)
         {
-            bool debug = false;
-            foreach (string arg in args) {
-                switch (arg) {
-                    case "-d":
-                    case "--debug":
-                        debug = true;
-                        break;
-                    case "-h":
-                    case "--help":
-                        ShowHelp();
-                        Environment.Exit(0);
-                        break;
-                    /*
-                    // don't block other parameters as we pass them to
-                    // GTK+ / GNOME too
-                    default:
-                        Console.WriteLine("Invalid option: " + arg);
-                        Environment.Exit(1);
-                        break;
-                    */
+            var debug = false;
+            var link = String.Empty;
+            var engine = String.Empty;
+            var options = new OptionSet();
+            options.Add(
+                "d|debug",
+                _("Enable debug output"),
+                v => {
+                    debug = true;
                 }
-            }
-            
-#if LOG4NET
-            // initialize log level
-            log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
-            if (debug) {
-                repo.Threshold = log4net.Core.Level.Debug;
-            } else {
-                repo.Threshold = log4net.Core.Level.Info;
-            }
-#endif
+            );
+            options.Add(
+                "h|help",
+                _("Show this help"),
+                v => {
+                    Console.WriteLine("Usage: smuxi-frontend-gnome [options]");
+                    Console.WriteLine();
+                    Console.WriteLine(_("Options:"));
+                    options.WriteOptionDescriptions(Console.Out);
+                    Environment.Exit(0);
+                }
+            );
+            options.Add(
+                "e|engine=",
+                _("Connect to engine"),
+                v => {
+                    engine = v;
+                }
+            );
+            options.Add(
+                "open|open-link=",
+                _("Opens the specified link in Smuxi"),
+                v => {
+                    link = v;
+                }
+            );
 
             try {
-                Frontend.Init(args);
+                options.Parse(args);
+
+#if LOG4NET
+                // initialize log level
+                log4net.Repository.ILoggerRepository repo = log4net.LogManager.GetRepository();
+                if (debug) {
+                    repo.Threshold = log4net.Core.Level.Debug;
+                } else {
+                    repo.Threshold = log4net.Core.Level.Info;
+                }
+#endif
+
+                Instance = new SingleApplicationInstance<CommandLineInterface>();
+                if (Instance.IsFirstInstance) {
+                    Instance.FirstInstance = new CommandLineInterface();
+                } else {
+                    if (!String.IsNullOrEmpty(link)) {
+                        Instance.FirstInstance.OpenLink(link);
+                    }
+                    return;
+                }
+
+                Frontend.Init(args, engine);
             } catch (Exception e) {
 #if LOG4NET
                 _Logger.Fatal(e);
@@ -88,14 +127,9 @@ namespace Smuxi.Frontend.Gnome
             }
         }
 
-        private static void ShowHelp()
+        static string _(string msg)
         {
-            Console.WriteLine("Usage: smuxi-frontend-gnome [options]");
-            Console.WriteLine();
-            Console.WriteLine("Options:");
-            Console.WriteLine("  -h --help                Show this help");
-            Console.WriteLine("  -d --debug               Enable debug output");
-            Console.WriteLine("  -e --engine engine-name  Connect to engine");
+            return LibraryCatalog.GetString(msg, LibraryTextDomain);
         }
     }
 }
