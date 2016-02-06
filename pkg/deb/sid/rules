@@ -45,9 +45,5 @@ override_dh_install:
 	# optional system libs
 	-install /usr/lib/gio-sharp/gio-sharp.dll* debian/smuxi-frontend-gnome/usr/lib/smuxi/
 
-override_dh_autoreconf:
-	ln -sf debian/autogen.sh
-	NOCONFIGURE=1 NOGIT=1 dh_autoreconf ./autogen.sh
-
 %:
 	dh $@ --with autoreconf,cli,quilt
