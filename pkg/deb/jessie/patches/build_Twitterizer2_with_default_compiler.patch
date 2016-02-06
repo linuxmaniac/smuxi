@@ -1,0 +1,11 @@
+Index: smuxi/lib/Twitterizer/Twitterizer2/Twitterizer2.csproj
+===================================================================
+--- smuxi.orig/lib/Twitterizer/Twitterizer2/Twitterizer2.csproj	2015-01-11 23:16:26.557624565 +0100
++++ smuxi/lib/Twitterizer/Twitterizer2/Twitterizer2.csproj	2015-01-11 23:16:26.557624565 +0100
+@@ -1,5 +1,5 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
