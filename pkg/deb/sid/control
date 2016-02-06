@@ -30,9 +30,10 @@ Build-Depends-Indep: autoconf,
                      libstfl-dev (>= 0.21),
                      lsb-release,
                      mono-devel (>= 2.6),
-                     mono-xbuild (>= 2.6),
                      mono-runtime-boehm,
-                     pkg-config
+                     mono-xbuild (>= 2.6),
+                     pkg-config,
+                     quilt
 Standards-Version: 3.9.6
 Homepage: https://smuxi.im/
 Vcs-Git: git://anonscm.debian.org/pkg-cli-apps/packages/smuxi.git
