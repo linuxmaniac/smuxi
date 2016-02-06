@@ -18,7 +18,7 @@ Copyright: 2008, Alan McGovern <alan.mcgovern@gmail.com>
 License: GPL-2+
 
 Files: src/smuxi-win32.nsis
-Copyright: 2009, Sebastian Schnur <ikkerus@ikkerus.net>     
+Copyright: 2009, Sebastian Schnur <ikkerus@ikkerus.net>
            2009, Mirco Bauer <meebey@meebey.net>
 License: GPL-2+
 
@@ -51,7 +51,7 @@ License: GPL-2+
 
  You should have received a copy of the GNU General Public License along
  with this program; if not, write to the Free Software Foundation, Inc.,
- 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.   
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  On Debian systems, the complete text of the GNU General Public License
  can be found in the `/usr/share/common-licenses/GPL-2' file.

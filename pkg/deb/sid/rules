@@ -5,27 +5,19 @@ LSB_VENDOR = $(shell lsb_release -is)
 LSB_CODENAME = $(shell lsb_release -cs)
 DEB_VERSION = $(shell dpkg-parsechangelog -ldebian/changelog | grep ^Vers | cut -d\  -f2)
 
-DISABLE_JABBR =
-ifeq ($(LSB_VENDOR) $(LSB_CODENAME), Ubuntu lucid)
-	DISABLE_JABBR = --disable-engine-jabbr
-endif
-
 override_dh_auto_configure:
-	if [ -x ./autogen.sh ]; then \
-		NOCONFIGURE=1 NOGIT=1 ./autogen.sh; \
-	fi
 	dh_auto_configure -- \
-	  --with-vendor-package-version="Debian $(DEB_VERSION)" \
-	  --enable-engine-irc \
-	  --enable-engine-twitter \
-	  --enable-engine-xmpp \
-	  --enable-frontend-gnome \
-	  --enable-frontend-stfl \
-	  --with-db4o=included \
-	  --with-notify \
-	  --with-dbus \
-	  $(DISABLE_JABBR) \
-	  GMCS=/usr/bin/mono-csc MCS=/usr/bin/mono-csc
+		--with-vendor-package-version="Debian $(DEB_VERSION)" \
+		--enable-engine-campfire \
+		--enable-engine-irc \
+		--enable-engine-jabbr \
+		--enable-engine-xmpp \
+		--enable-frontend-gnome \
+		--enable-frontend-stfl \
+		--with-notify \
+		--with-gtkspell \
+		--with-db4o=included \
+		GMCS=/usr/bin/mono-csc MCS=/usr/bin/mono-csc
 
 # disable "make check"
 override_dh_auto_test:
@@ -33,11 +25,10 @@ override_dh_auto_test:
 # disable stripping debugging symbols
 override_dh_clistrip:
 
+# disable generating clilibs
+override_dh_makeclilibs:
+
 override_dh_clideps:
-# HACK: force missing native dependency on libindicate4 via hacked clilibs
-ifeq ($(LSB_VENDOR) $(LSB_CODENAME), Ubuntu lucid)
-	cat debian/indicate-sharp-0.4.1.clilibs >> debian/smuxi-frontend-gnome/DEBIAN/clilibs
-endif
 	dh_clideps \
 		--exclude-moduleref=i:secur32 \
 		--exclude-moduleref=i:secur32.dll \
@@ -48,14 +39,15 @@ endif
 
 override_dh_install:
 	dh_install
-	# optional binary files
+	# optional included libs
 	-dh_install -p smuxi-frontend-gnome "usr/lib/smuxi/messagingmenu-sharp.dll*"
 	-dh_install -p smuxi-frontend-gnome "usr/lib/smuxi/gio-sharp.dll*"
 	# optional system libs
 	-install /usr/lib/gio-sharp/gio-sharp.dll* debian/smuxi-frontend-gnome/usr/lib/smuxi/
-	# JabbR doesn't build on Mono < 2.10
-	-dh_install -p smuxi-engine "usr/lib/smuxi/Microsoft.AspNet.SignalR.Client.dll*"
-	-dh_install -p smuxi-engine "usr/lib/smuxi/JabbR.Client.dll*"
+
+override_dh_autoreconf:
+	ln -sf debian/autogen.sh
+	NOCONFIGURE=1 NOGIT=1 dh_autoreconf ./autogen.sh
 
 %:
-	dh $@ --with cli
+	dh $@ --with autoreconf,cli,quilt

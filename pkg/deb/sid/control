@@ -2,44 +2,46 @@ Source: smuxi
 Section: gnome
 Priority: optional
 Maintainer: Mirco Bauer <meebey@debian.org>
-Build-Depends: debhelper (>= 7.0.50)
-Build-Depends-Indep: cli-common-dev (>= 0.5.7),
- mono-devel (>= 2.6),
- mono-xbuild (>= 2.6),
- libnini-cil-dev (>= 1.1),
- liblog4net-cil-dev,
- libgtk2.0-cil-dev (>= 2.8),
- libgnome2.0-cil-dev (>= 2.24),
- libglade2.0-cil-dev (>= 2.8),
- libglib2.0-cil-dev (>= 2.8),
- libgnome-vfs2.0-cil-dev (>= 2.8),
- libart2.0-cil-dev (>= 2.8),
- libnotify-cil-dev,
- libmessagingmenu-cil-dev | libindicate0.1-cil-dev | libindicate-dev,
- libgio2.0-cil-dev | libglib2.0-dev,
- gtk-sharp2-gapi,
- libdbus1.0-cil-dev | libndesk-dbus1.0-cil-dev,
- libdbus-glib1.0-cil-dev | libndesk-dbus-glib1.0-cil-dev,
- libgtkspell-dev,
- libstfl0,
- libstfl-dev (>= 0.21),
- lsb-release,
- pkg-config,
- gettext,
- intltool,
- libtool-bin | libtool (<< 2.4.2-1.8~),
- autoconf,
- automake,
- autotools-dev
-Standards-Version: 3.8.3
+Uploaders: Victor Seva <linuxmaniac@torreviejawireless.org>
+Build-Depends: debhelper (>= 7.0.50),
+               dh-autoreconf
+Build-Depends-Indep: autoconf,
+                     automake,
+                     autopoint,
+                     autotools-dev,
+                     cli-common-dev (>= 0.5.7),
+                     gettext,
+                     gtk-sharp2-gapi,
+                     intltool,
+                     libart2.0-cil-dev (>= 2.8),
+                     libdbus-glib2.0-cil-dev | libdbus-glib1.0-cil-dev | libndesk-dbus-glib1.0-cil-dev,
+                     libdbus2.0-cil-dev | libdbus1.0-cil-dev | libndesk-dbus1.0-cil-dev,
+                     libgio2.0-cil-dev | libglib2.0-dev,
+                     libglade2.0-cil-dev (>= 2.8),
+                     libglib2.0-cil-dev (>= 2.8),
+                     libgnome-vfs2.0-cil-dev (>= 2.8),
+                     libgnome2.0-cil-dev (>= 2.24),
+                     libgtk2.0-cil-dev (>= 2.8),
+                     libgtkspell-dev (>= 2.0.9),
+                     libindicate0.1-cil-dev (<< 12.10~) | libmessagingmenu-cil-dev | libindicate-dev,
+                     liblog4net-cil-dev,
+                     libnini-cil-dev (>= 1.1),
+                     libnotify-cil-dev,
+                     libstfl-dev (>= 0.21),
+                     lsb-release,
+                     mono-devel (>= 2.6),
+                     mono-xbuild (>= 2.6),
+                     mono-runtime-boehm,
+                     pkg-config
+Standards-Version: 3.9.6
 Homepage: https://smuxi.im/
-Vcs-Git: https://github.com/meebey/smuxi.git
-Vcs-Browser: https://github.com/meebey/smuxi
+Vcs-Git: git://anonscm.debian.org/pkg-cli-apps/packages/smuxi.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-cli-apps/packages/smuxi.git
 
 Package: smuxi
 Architecture: all
-Depends: ${misc:Depends},
-         smuxi-frontend-gnome (= ${source:Version}),
+Depends: smuxi-frontend-gnome (= ${source:Version}),
+         ${misc:Depends}
 Description: graphical IRC client
  Smuxi is an irssi-inspired, flexible, user-friendly and cross-platform IRC
  client for sophisticated users, targeting the GNOME desktop.
@@ -60,25 +62,21 @@ Description: graphical IRC client
 Package: smuxi-engine
 Architecture: all
 Replaces: smuxi (<< 0.5.25),
-          smuxi-engine-irc (<< 1:0.8.12+git-0~265~),
-          smuxi-engine-twitter (<< 1:0.8.12+git-0~265~),
-          smuxi-engine-xmpp (<< 1:0.8.12+git-0~265~),
-          smuxi-frontend (<< 1:0.8.12+git-0~265~),
-          smuxi-server (<< 1:0.8.12+git-0~265~)
-Conflicts: smuxi-engine-irc (<< 1:0.8.12+git-0~265~),
-           smuxi-engine-twitter (<< 1:0.8.12+git-0~265~),
-           smuxi-engine-xmpp (<< 1:0.8.12+git-0~265~),
-           smuxi-frontend (<< 1:0.8.12+git-0~265~),
-           smuxi-server (<< 1:0.8.12+git-0~265~)
-Provides: smuxi-server
+          smuxi-engine-irc (<< 0.8.10.2),
+          smuxi-engine-twitter (<< 0.8.10.2),
+          smuxi-engine-xmpp (<< 0.8.10.2),
+          smuxi-frontend (<< 0.8.10.2),
+          smuxi-server (<< 0.8.10.2)
+Breaks: smuxi-engine-irc (<< 0.8.10.2),
+        smuxi-engine-twitter (<< 0.8.10.2),
+        smuxi-engine-xmpp (<< 0.8.10.2),
+        smuxi-frontend (<< 0.8.10.2),
+        smuxi-server (<< 0.8.10.2)
 Suggests: oidentd | ident-server
-Depends: ${shlibs:Depends},
+Depends: ${cli:Depends},
          ${misc:Depends},
-         ${cli:Depends}
-Recommends: unattended-upgrades,
-            cron-apt,
-            mono-runtime-boehm
-Description: Engine libraries for Smuxi
+         ${shlibs:Depends}
+Description: Engine libraries for Smuxi (IRC, Twitter, XMPP, Campfire, JabbR)
  Smuxi is an irssi-inspired, flexible, user-friendly and cross-platform IRC
  client for sophisticated users, targeting the GNOME desktop.
  .
@@ -92,34 +90,33 @@ Description: Engine libraries for Smuxi
  typical IRC client; it doesn't need separate core management and utilizes a
  local engine that is used by the local frontend client.
  .
- This package contains the Smuxi engines, needed by Smuxi frontends or the
- standalone server.
+ This package contains all Smuxi engines and the standalone server.
  .
  The standalone server of Smuxi named smuxi-server doesn't need any GUI. The
  Smuxi frontends can connect to a running server via the network.
  .
  The following Smuxi engines are included in this package:
- * IRC engine
- * Twitter engine
-   - receive and post tweets to the Twitter microblogging service.
-   - friends timeline, replies view, and direct messages.
- * XMPP engine
-   - receive and send messages on XMPP, Jabber, GTalk and the Facebook chat.
- * Campfire engine
- * JabbR engine
+  * IRC engine
+  * Twitter engine
+    - receive and post tweets to the Twitter microblogging service.
+    - friends timeline, replies view, and direct messages.
+  * XMPP engine
+    - receive and send messages on XMPP, Jabber, GTalk and the Facebook chat.
+  * Campfire engine
+  * JabbR engine
 
 Package: smuxi-frontend-gnome
 Architecture: all
 Replaces: smuxi (<< 0.5.25),
-          smuxi-frontend-gnome-irc (<< 1:0.8.12+git-0~265~)
-Conflicts: smuxi-frontend-gnome-irc (<< 1:0.8.12+git-0~265~)
-Recommends: ssh-askpass-gnome | ssh-askpass,
-            notification-daemon
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         ${cli:Depends},
+          smuxi-frontend-gnome-irc (<< 0.8.10.2)
+Breaks: smuxi-frontend-gnome-irc (<< 0.8.10.2)
+Recommends: notification-daemon,
+            ssh-askpass-gnome | ssh-askpass
+Depends: librsvg2-common,
          smuxi-engine (= ${source:Version}),
-         librsvg2-common
+         ${cli:Depends},
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: GNOME frontend for Smuxi
  Smuxi is an irssi-inspired, flexible, user-friendly and cross-platform IRC
  client for sophisticated users, targeting the GNOME desktop.
@@ -139,10 +136,10 @@ Description: GNOME frontend for Smuxi
 
 Package: smuxi-frontend-stfl
 Architecture: all
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
+Depends: smuxi-engine (= ${source:Version}),
          ${cli:Depends},
-         smuxi-engine (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
 Description: STFL frontend for Smuxi (experimental)
  Smuxi is an irssi-inspired, flexible, user-friendly and cross-platform IRC
  client for sophisticated users, targeting the GNOME desktop.
@@ -164,4 +161,3 @@ Description: STFL frontend for Smuxi (experimental)
  STFL is a library that uses ncurses to draw text based  user interface using
  a markup language (like Glade for GTK+). This frontend is in early alpha state
  and lacks a lot of interface features and likes to crash.
-
